@@ -47,3 +47,11 @@ Warning: Only use this tool to fix errors!
 4. Change file_to_fix to the name of the json you wanna fix
 5. Change file_to_fix_folder to the name of the folder where the json you wanna fix is
 6. Run the program and it will fix the file
+
+# Credits
+
+Thanks to [azusagawa.it](https://github.com/Azusagawa-it) for the [EBM extractor for a24 (Ryza 3)](https://github.com/Azusagawa-it/a24_ebm)
+
+Thanks to [MisterGunXD](https://github.com/MisterGunXD) for helping with bugs, styling, and creating the python Encoder/Decoder for json files that gust_ebm creates.
+
+Thanks to [VitaSmith](https://github.com/VitaSmith) for creating [Gust Tools](https://github.com/VitaSmith/gust_tools)
