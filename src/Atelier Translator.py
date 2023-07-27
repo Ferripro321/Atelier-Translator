@@ -165,7 +165,7 @@ else:
     for ebm_folder in get_subfolder_paths(event_folder):
         ebm_folder_key = get_last_folder_name(ebm_folder)
         current_ebm_folder_num += 1
-        print(Fore.GREEN + "Starting Folder " + str(ebm_folder_key) + " -> " + str(current_ebm_folder_num) + " / " + ebm_folders_num + Fore.RESET)
+        print(Fore.GREEN + "Starting Folder " + ebm_folder_key + " -> " + str(current_ebm_folder_num) + " / " + str(ebm_folders_num) + Fore.RESET)
         for file_path in get_files_with_extension(ebm_folder, ".ebm"):
             subprocess.run([gust_ebm, file_path])
             remove_file(file_path)
