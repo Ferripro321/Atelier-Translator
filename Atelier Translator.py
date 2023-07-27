@@ -8,9 +8,9 @@ to change the font of the game.
 
 How to use it:
 
-1) Open or create a file called data.env and place the following coode:
+1) Open or create a file called settings.env and place the following code:
 
-OPENAI_API_KEY=YOUR-OPENAI-KEY-HERE # replace YOUR-OPENAI-KEY-HERE with the key you can find in https://platform.openai.com/account/api-keys (make sure you still have the free balance or create a new accound to get free 5$ -> https://platform.openai.com/account/usage)
+OPENAI_API_KEY=YOUR-OPENAI-KEY-HERE # replace YOUR-OPENAI-KEY-HERE with the key you can find in https://platform.openai.com/account/api-keys (make sure you still have the free balance or create a new account to get free 5$ -> https://platform.openai.com/account/usage)
 GUST_EBM_PATH=PATH-TO-GUST-EBM # Replace PATH-TO-GUST-EBM with the path of your gust ebm. Example: C:/Users/Ferra/Desktop/gust_tools/gust_ebm.exe (Download it here: https://github.com/VitaSmith/gust_tools/releases)
 EVENT_FOLDER=YOUR-UNPACKED-GAME-EVENT-PATH # Replace YOUR-UNPACKED-GAME-EVENT-PATH with the event_en / any event_ folder found on the unpacked game files (guide will be included in next steps) Example: C:/Users/Ferra/Desktop/Sophie 2 unpack/event/event_en
 CUSTOMDUMPER=True/False # Replace True/False with True if you wanna use the tool for Ryza 3 or a more recent game, False for older games than Ryza 3
@@ -22,15 +22,15 @@ DEBUGER=False # Put True if you know what you are doing, but you probably wanna 
 
 4) Drag the PACK01.PAK that you have on the folder you created to gust_pak.exe (Download it here: https://github.com/VitaSmith/gust_tools/releases)
 
-5) Now you will see some folders and files, go to event, then event_en (This is the folder pat you have to put on YOUR-UNPACKED-GAME-EVENT-PATH)
+5) Now you will see some folders and files, go to event, then event_en (This is the folder path you have to put on YOUR-UNPACKED-GAME-EVENT-PATH)
 
-6) Open the microsoft store
+6) Open the Microsoft store
 
 7) Search "Python 3.11" and install it
 
 8) Now open cmd (windows key + R and type cmd, then click enter)
 
-9) Put the following commands one by one on the cmd (only needed first time):
+9) Put the following commands one by one on the cmd (only needed the first time):
         pip install openai
         pip install pyperclip
         pip install colorama
