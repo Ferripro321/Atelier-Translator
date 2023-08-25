@@ -124,6 +124,7 @@ if CUSTOMDUMPER == True:
         print(Fore.GREEN + "Starting Folder " + ebm_folder_key + " -> " + str(current_ebm_folder_num) + " / " + str(ebm_folders_num) + Fore.RESET)
         for file_path in get_files_with_extension(ebm_folder, ".ebm"):
             if DEBUGER: print(Fore.BLUE + "1 Starting: " + file_path)
+            print("Gonna to to extract: " + file_path)
             subprocess.run([a24_ebm, "--extract-strings", file_path], cwd=local_folder)
             if DEBUGER: print("2 ->", os.path.basename(file_path))
             with open(local_folder + "extracted-strings.txt", "r", encoding="utf-8") as file:
@@ -151,10 +152,12 @@ if CUSTOMDUMPER == True:
     
             if count_lines(local_folder + "output.txt") == count_lines(local_folder + "extracted-strings.txt"):
                 if DEBUGER: print("Seems OK")
+                print("Gonna try to replace: " + file_path)
                 subprocess.run([a24_ebm, "--replace-strings", file_path, local_folder + "output.txt"], cwd=local_folder)
                 print("New EBM created")
                 move_file(local_folder + "modified.ebm", local_folder + "Translated/" + ebm_folder_key + "/modified.ebm")
                 rename_file(local_folder + "Translated/" + ebm_folder_key + "/modified.ebm", local_folder + "Translated/" + ebm_folder_key + "/" + os.path.basename(file_path))
+                remove_file(file_path)
             else:
                 print(Fore.RED + "Chat GPT fucked up, you will manually need to fix this file later." + Fore.RESET)
                 move_file(local_folder + 'extracted-strings.txt', local_folder + "Errors/" + "extracted-strings-" + os.path.splitext(os.path.basename(file_path))[0] + ".txt")
