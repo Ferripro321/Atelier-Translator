@@ -11,7 +11,7 @@ A simple tool that uses AI to translate Atelier games into any language
     CUSTOMDUMPER=True/False # Replace True/False with True if you wanna use the tool for Ryza 3 or a more recent game, False for older games than Ryza 3
     DEBUGER=False # Put True if you know what you are doing, but you probably wanna keep this at False.
    ```
-2. Scroll down on this file and in promp change Spanish to the language you wanna translate to.
+2. Open Atelir Translator.py on a text/code editor and acroll down until you find promp = """  some text """ (forgot the t, too lazy to fix on code) change Spanish to the language you wanna translate to (also update the example of translation on the prompt to the language you wanna translate to).
 3. Go to your game files, go to data folder of the game, copy "PACK01.PAK" and paste it on a new folder that you can create on your desktop.
 4. Drag the PACK01.PAK that you have on the folder you created to gust_pak.exe -> [Download it here](https://github.com/VitaSmith/gust_tools/releases)
 5. Now you will see some folders and files, go to event, then event_en (This is the folder path you have to put on YOUR-UNPACKED-GAME-EVENT-PATH)
