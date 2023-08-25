@@ -17,8 +17,8 @@ Enjoy (;
 from functions import *
 
 
-file_to_fix_folder = "" # Example: mm01
-file_to_fix = "" # Example: event_message_mm01_140.ebm
+file_to_fix_folder = "xq02" # Example: mm01
+file_to_fix = "event_message_xq02_410.ebm" # Example: event_message_mm01_140.ebm
 
 local_folder = os.path.dirname(os.path.abspath(__file__)) + "/"
 
@@ -30,8 +30,8 @@ ebm_folder = event_folder + "/" + file_to_fix_folder
 
 a24_ebm = local_folder + "/Custom Dumper/Dumper.exe"
 
-extracted_strings_path = local_folder + "Errors/extracted-strings-" + file_to_fix + ".txt"
-output_path = local_folder + "Errors/output-" + file_to_fix + ".txt"
+extracted_strings_path = local_folder + "Errors/extracted-strings-" + os.path.splitext(os.path.basename(file_to_fix))[0] + ".txt"
+output_path = local_folder + "Errors/output-" + os.path.splitext(os.path.basename(file_to_fix))[0] + ".txt"
 
 print(count_lines(output_path))
 print(count_lines(extracted_strings_path))
@@ -42,7 +42,7 @@ if count_lines(output_path) == count_lines(extracted_strings_path):
     print("New EBM created")
     move_file(local_folder + "modified.ebm", local_folder + "Translated/" + file_to_fix_folder + "/modified.ebm")
     rename_file(local_folder + "Translated/" + file_to_fix_folder + "/modified.ebm", local_folder + "Translated/" + file_to_fix_folder + "/" + file_to_fix)
+    remove_file(ebm_folder + "/" + file_to_fix)
     print("Done")
 else: 
     print("File isn't fixed")
-
