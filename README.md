@@ -1,5 +1,5 @@
 # Atelier Translator
-A simple tool that uses AI to translate Atelier games into any language.  
+A simple tool that uses AI to translate Atelier games into any language. (Warning: It only translates the story and submissions text, ui won't be translated) 
 
 Now with v2 Atelier Translator has a web ui and it's more easy than ever to use, anyone can use this tool now, no need to touch a single line of code anymore!  
 
