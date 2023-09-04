@@ -6,26 +6,10 @@ import webbrowser
 from functions import *
 from fixer import *
 
-prompt = """You are now going to be an English to Spanish translator. You must only reply the translated sentences, nothing else.
-
-When you see a //, consider it to be the end of a sentence and start a new sentence in Spanish.
-
-Don't leave blank/empty lines!
-
-For example, if I give you this:
-I have witnessed countless dreams.//I am all alone,//... I can't stop ... Not until I find Plachta.
-
-You should return:
-
-He presenciado innumerables sueños.
-Estoy completamente sola,
-... No puedo parar ... No hasta encontrar a Plachta."""
-
-model = "gpt-3.5-turbo"
-
 def translation_start(gust_tools_path, is_a24, openai_apikey):
-    global prompt
-    global model
+    prompt = UI.get_prompt(UI)
+    model = UI.get_model(UI)
+
     openai.api_key = openai_apikey
     custom_ebm_translation_handler(prompt, model) if is_a24 else gust_tools_translator_handler(gust_tools_path, prompt, model)
     return "ok"
@@ -130,13 +114,13 @@ with gr.Blocks(title="Atelier Translator") as ui:
             is_a24 = gr.Checkbox(label="Atelier Ryza 3")
             gr.Markdown("You may wanna edit this prompt to make Chat GPT translate to the language you want, current promp is ideal for Spanish. (Click save prompt after editing it)")
             gr.Markdown("⚠️ The largest the prompt is the more time and credits it will take ⚠️")
-            new_prompt = gr.Textbox(label="Prompt",value=prompt, lines=15)
+            new_prompt = gr.Textbox(label="Prompt",value=UI.get_prompt(UI), lines=15)
             btn5 = gr.Button("Save prompt", variant="primary")
             prompt_status = gr.Textbox(show_label=False, interactive=False)
             gr.Markdown("To make sure the promp has been changed/loaded correctly you can click the following button and check your console to see the prompt that has been returned")
             test_prompt = gr.Button("Test prompt")
             gr.Markdown("You can change the OpenAI Model here, but I wouldn't recommend to use gpt4 models due to price. More info on models here: https://platform.openai.com/docs/models")
-            new_model = gr.Textbox(label="Model", value="gpt-3.5-turbo")
+            new_model = gr.Textbox(label="Model", value=UI.get_model(UI))
             btn6 = gr.Button("Save model", variant="primary")
             model_status = gr.Textbox(show_label=False, interactive=False)
             gr.Markdown("To make sure the model has been changed/loaded correctly you can click the following button and check your console to see the prompt that has been returned")
@@ -167,13 +151,13 @@ with gr.Blocks(title="Atelier Translator") as ui:
     btn3.click(UI.unpack_pak, inputs=[game_path, gust_tools_path], outputs=unpack_status)
     btn4.click(lambda: "Translation Started, from now on check terminal for logs", outputs=translation_status)
     btn4.click(translation_start, inputs=[gust_tools_path, is_a24, openai_apikey])
-    btn5.click(UI.update_prompt, inputs=new_prompt, outputs=prompt_status)
-    btn6.click(UI.update_model, inputs=new_model, outputs=model_status)
+    btn5.click(UI.update_prompt.__get__(UI), inputs=new_prompt, outputs=prompt_status)
+    btn6.click(UI.update_model.__get__(UI), inputs=new_model, outputs=model_status)
     btn8.click(UI.repack_game, inputs=[gust_tools_path], outputs=repack_status)
 
 
-    test_prompt.click(UI.prompt_test)
-    test_model.click(UI.model_test)
+    test_prompt.click(UI.prompt_test.__get__(UI))
+    test_model.click(UI.model_test.__get__(UI))
     refresh.click(refresh_errors, outputs=to_fix)
     Show_file_content.click(UI.load_original_file, inputs=to_fix, outputs=original_text)
     Show_file_content.click(UI.load_file_to_edit, inputs=to_fix, outputs=new_text)
@@ -194,8 +178,8 @@ with gr.Blocks(title="Atelier Translator") as ui:
     Breload_settings.click(lambda: UI.get_env_variable("GAME_PATH", "settings.env"), outputs=game_path)
     Breload_settings.click(lambda: UI.get_env_variable("GUST_TOOLS_PATH", "settings.env"), outputs=gust_tools_path)
     Breload_settings.click(lambda: UI.get_env_variable("CUSTOMDUMPER", "settings.env") == "True", outputs=is_a24)
-    Breload_settings.click(UI.load_model, outputs=new_model)
-    Breload_settings.click(UI.load_prompt, outputs=new_prompt)
+    Breload_settings.click(UI.load_model.__get__(UI), outputs=new_model)
+    Breload_settings.click(UI.load_prompt.__get__(UI), outputs=new_prompt)
     Breload_settings.click(lambda: "Done Loading Settings!", outputs=settings_status)
 
 

@@ -34,6 +34,9 @@ class CustomFileSystem:
                 yield file_path
     
     def read_text_from_file(file_path):
+        if not os.path.exists(file_path):
+            return None
+
         with open(file_path, 'r', encoding='utf-8') as file:
             file_contents = file.read()
             return file_contents
@@ -176,6 +179,28 @@ class CustomFileSystem:
 
 
 class UI:
+    __prompt = """You are now going to be an English to Spanish translator. You must only reply the translated sentences, nothing else.
+
+When you see a //, consider it to be the end of a sentence and start a new sentence in Spanish.
+
+Don't leave blank/empty lines!
+
+For example, if I give you this:
+I have witnessed countless dreams.//I am all alone,//... I can't stop ... Not until I find Plachta.
+
+You should return:
+
+He presenciado innumerables sueños.
+Estoy completamente sola,
+... No puedo parar ... No hasta encontrar a Plachta."""
+    __model = "gpt-3.5-turbo"
+
+    def get_prompt(self):
+        return self.__prompt
+
+    def get_model(self):
+        return self.__model
+
     def load_original_file(file):
         extracted_event_path = local_folder + "Errors/extracted-strings-" + file
         return CustomFileSystem.read_text_from_file(extracted_event_path)
@@ -184,21 +209,19 @@ class UI:
         output_event_path = local_folder + "Errors/output-" + file
         return CustomFileSystem.read_text_from_file(output_event_path)
     
-    def update_prompt(new_prompt):
-        global prompt
-        prompt = new_prompt
-        prompt_path = local_folder + "/prompt.txt"
+    def update_prompt(self, new_prompt):
+        self.__prompt = new_prompt
+
         try:
-            CustomFileSystem.save_text_to_file(prompt_path, new_prompt)
+            CustomFileSystem.save_text_to_file(os.path.join(local_folder, "prompt.txt"), new_prompt)
             print(Fore.GREEN + "Saved" + Fore.RESET)
             return "Saved"
-        except:
-            print(Fore.GREEN + "There was an error... (Check console logs)" + Fore.RESET)
-            return "There was an error... (Check console logs)"
+        except Exception as error:
+            return str(error)
     
-    def update_model(new_model):
-        global model
-        model = new_model
+    def update_model(self, new_model):
+        self.__model = new_model
+
         try:
             env_file_path = find_dotenv("settings.env")
             env_values = dotenv_values(env_file_path)
@@ -207,33 +230,29 @@ class UI:
                 set_key(env_file_path, key, value)
             print(Fore.GREEN + "Updated Model!" + Fore.RESET)
             return "Updated Model!"
-        except:
-            print(Fore.GREEN + "There was an error saving the data" + Fore.RESET)
-            return "There was an error saving the data"    
+        except Exception as error:
+            return str(error)    
         
-    def load_model():
-        global model
+    def load_model(self):
         try:
-            model = UI.get_env_variable("MODEL", "settings.env")
-            return model
+            self.__model = UI.get_env_variable("MODEL", "settings.env")
+            return self.__model
         except:
             return "Error"
         
-    def load_prompt():
-        global prompt
-        try:
-            prompt = CustomFileSystem.read_text_from_file(local_folder + "/prompt.txt")
-            return prompt
-        except:
-            return prompt
+    def load_prompt(self):
+        temp = CustomFileSystem.read_text_from_file(os.path.join(local_folder, "prompt.txt"))
+        if temp is None:
+            return self.__prompt
 
-    def prompt_test():
-        global prompt
-        print(Fore.YELLOW + "Current loaded prompt =\n" + Fore.RESET + prompt)
+        self.__prompt = temp
+        return temp
 
-    def model_test():
-        global model
-        print(Fore.YELLOW + "Current model = " + Fore.RESET + model)
+    def prompt_test(self):
+        print(Fore.YELLOW + "Current loaded prompt =\n" + Fore.RESET + self.__prompt)
+
+    def model_test(self):
+        print(Fore.YELLOW + "Current model = " + Fore.RESET + self.__model)
 
     def save_output_file(text, to_fix):
         save_path = local_folder + "Errors/output-" + to_fix
@@ -264,9 +283,8 @@ class UI:
             subprocess.run([gust_pak_path + "/gust_pak.exe", local_folder + "Unpack/PACK01.PAK"], cwd=local_folder)
             print(Fore.GREEN + "Done" + Fore.RESET)
             return "Done"
-        except:
-            print(Fore.RED + "There was an error..." + Fore.RESET)
-            return "There was an error..."
+        except Exception as error:
+            return str(error)
         
     def repack_game(gust_tools_path):
         gust_tools_path = gust_tools_path.replace("\\", "/")
@@ -286,9 +304,8 @@ class UI:
             CustomFileSystem.move_file(local_folder + "Unpack/PACK01.pak", local_folder + "Output/PACK01.PAK")
             print(Fore.GREEN + "The new .pak has been created (Go to the Output folder, and inside you will find the new PACK01.PAK)" + Fore.RESET)
             return "The new .pak has been created (Go to the Output folder, and inside you will find the new PACK01.PAK)"
-        except:
-            print(Fore.RED + "There was an error" + Fore.RESET)
-            return "There was an error"
+        except Exception as error:
+            return str(error)
             
 
     def save_settings(OPENAI_API_KEY, GUST_TOOLS_PATH, GAME_PATH, CUSTOMDUMPER):   
@@ -311,8 +328,8 @@ class UI:
                 set_key(env_file_path, key, value)
 
             return "Updated Settings!"
-        except:
-            return "There was an error saving the data"
+        except Exception as error:
+            return str(error)
     
     def find_path():
         root = tk.Tk()
@@ -423,7 +440,6 @@ class UI:
                         file_name.write(content)
             print(Fore.GREEN + "Done fixing mod folder" + Fore.RESET)
             return "Done fixing mod folder"
-        except:
-            print(Fore.RED + "There was an error" + Fore.RESET)
-            return "There was an error"
+        except Exception as error:
+            return str(error)
         
