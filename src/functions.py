@@ -15,8 +15,27 @@ from colorama import Fore, Style
 colorama.init()
 from dotenv import load_dotenv, dotenv_values, set_key, find_dotenv
 
+model = "gpt-3.5-turbo"
 
 local_folder = os.path.dirname(os.path.abspath(__file__)) + "/"
+
+original_prompt = """You are now going to be an English to Spanish translator. You must only reply the translated sentences, nothing else.
+
+When you see a //, consider it to be the end of a sentence and start a new sentence in Spanish.
+
+Don't leave blank/empty lines!
+
+For example, if I give you this:
+I have witnessed countless dreams.//I am all alone,//... I can't stop ... Not until I find Plachta.
+
+You should return:
+
+He presenciado innumerables sueños.
+Estoy completamente sola,
+... No puedo parar ... No hasta encontrar a Plachta."""
+
+prompt = original_prompt
+
 
 def replace_hex_values(match):
     hex_value = match.group(1)
@@ -221,11 +240,12 @@ class UI:
         
     def load_prompt():
         global prompt
-        try:
+        if os.path.isfile(local_folder + "/prompt.txt"):
             prompt = CustomFileSystem.read_text_from_file(local_folder + "/prompt.txt")
             return prompt
-        except:
-            return prompt
+        else:
+            prompt = original_prompt
+            return original_prompt
 
     def prompt_test():
         global prompt
@@ -426,4 +446,3 @@ class UI:
         except:
             print(Fore.RED + "There was an error" + Fore.RESET)
             return "There was an error"
-        
