@@ -6,22 +6,6 @@ import webbrowser
 from functions import *
 from fixer import *
 
-prompt = """You are now going to be an English to Spanish translator. You must only reply the translated sentences, nothing else.
-
-When you see a //, consider it to be the end of a sentence and start a new sentence in Spanish.
-
-Don't leave blank/empty lines!
-
-For example, if I give you this:
-I have witnessed countless dreams.//I am all alone,//... I can't stop ... Not until I find Plachta.
-
-You should return:
-
-He presenciado innumerables sueños.
-Estoy completamente sola,
-... No puedo parar ... No hasta encontrar a Plachta."""
-
-model = "gpt-3.5-turbo"
 
 def translation_start(gust_tools_path, is_a24, openai_apikey):
     global prompt
