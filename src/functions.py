@@ -240,8 +240,8 @@ class UI:
         
     def load_prompt():
         global prompt
-        if os.path.isfile(local_folder + "/prompt.txt"):
-            prompt = CustomFileSystem.read_text_from_file(local_folder + "/prompt.txt")
+        if os.path.isfile(os.path.join(local_folder, "prompt.txt")):
+            prompt = CustomFileSystem.read_text_from_file(os.path.join(local_folder, "prompt.txt"))
             return prompt
         else:
             prompt = original_prompt
@@ -259,18 +259,18 @@ class UI:
         save_path = local_folder + "Errors/output-" + to_fix
         return CustomFileSystem.save_text_to_file(save_path, text)
 
-    def delete_translated_folder():
-        CustomFileSystem.remove_folder(local_folder + "Translated")
+    def delete_translated_folder(): 
+        CustomFileSystem.remove_folder(os.path.join(local_folder, "Translated"))
         print(Fore.GREEN + "Deleted 'Translated' folder" + Fore.RESET)
         return "Deleted 'Translated' folder"
 
     def delete_unpack_folder():
-        CustomFileSystem.remove_folder(local_folder + "Unpack")
+        CustomFileSystem.remove_folder(os.path.join(local_folder, "Unpack"))
         print(Fore.GREEN + "Deleted 'Unpack' folder" + Fore.RESET)
         return "Deleted 'Unpack' folder"
 
     def delete_errors_folder():
-        CustomFileSystem.remove_folder(local_folder + "Errors")
+        CustomFileSystem.remove_folder(os.path.join(local_folder, "Errors"))
         print(Fore.GREEN + "Deleted 'Errors' folder" + Fore.RESET)
         return "Deleted 'Errors' folder"
 
@@ -280,8 +280,8 @@ class UI:
         try:
             pak_path = game_path + "/Data/PACK01.PAK"
             print(pak_path)
-            CustomFileSystem.copy_file(pak_path, local_folder + "Unpack/PACK01.PAK")
-            subprocess.run([gust_pak_path + "/gust_pak.exe", local_folder + "Unpack/PACK01.PAK"], cwd=local_folder)
+            CustomFileSystem.copy_file(pak_path, os.path.join(local_folder, "Unpack", "PACK01.PAK"))
+            subprocess.run([gust_pak_path + "/gust_pak.exe", os.path.join(local_folder, "Unpack", "PACK01.PAK")], cwd=local_folder)
             print(Fore.GREEN + "Done" + Fore.RESET)
             return "Done"
         except:
@@ -290,11 +290,11 @@ class UI:
         
     def repack_game(gust_tools_path):
         gust_tools_path = gust_tools_path.replace("\\", "/")
-        try:
-            event_folder = local_folder + "Unpack/event/event_en"
-            translated_folder = local_folder + "Translated"
-            gust_pak = gust_tools_path + "/gust_pak.exe"
-            pack_json = local_folder + "Unpack/PACK01.json"
+        try: 
+            event_folder = os.path.join(local_folder, "Unpack", "event", "event_en")
+            translated_folder = os.path.join(local_folder, "Translated")
+            gust_pak = os.path.join(gust_tools_path, "gust_pak.exe") 
+            pack_json = os.path.join(local_folder, "Unpack", "PACK01.json")
             for subfolder in CustomFileSystem.get_subfolder_paths(event_folder):
                 for file in CustomFileSystem.get_files_in_folder(subfolder):
                     return "Found files on Unpack folder, please make sure you finished translating the game and you used fixer to fix the possible errors that were left..."
@@ -302,8 +302,8 @@ class UI:
                 CustomFileSystem.remove_folder(subfolder)
             for translated_subfolder in CustomFileSystem.get_subfolder_paths(translated_folder):
                 CustomFileSystem.copy_folder(translated_subfolder, event_folder)
-            subprocess.run([gust_pak, pack_json])
-            CustomFileSystem.move_file(local_folder + "Unpack/PACK01.pak", local_folder + "Output/PACK01.PAK")
+            subprocess.run([gust_pak, pack_json]) 
+            CustomFileSystem.move_file(os.path.join(local_folder, "Unpack", "PACK01.pak"), os.path.join(local_folder, "Output", "PACK01.PAK"))
             print(Fore.GREEN + "The new .pak has been created (Go to the Output folder, and inside you will find the new PACK01.PAK)" + Fore.RESET)
             return "The new .pak has been created (Go to the Output folder, and inside you will find the new PACK01.PAK)"
         except:
@@ -446,3 +446,4 @@ class UI:
         except:
             print(Fore.RED + "There was an error" + Fore.RESET)
             return "There was an error"
+        
