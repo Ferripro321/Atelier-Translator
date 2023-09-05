@@ -245,7 +245,7 @@ class UI:
             return prompt
         else:
             prompt = original_prompt
-            return original_prompt
+            return prompt
 
     def prompt_test():
         global prompt
