@@ -34,9 +34,18 @@ He presenciado innumerables sueños.
 Estoy completamente sola,
 ... No puedo parar ... No hasta encontrar a Plachta."""
 
-prompt = original_prompt
+global prompt
 
-
+def read_prompt_file(file_name='prompt.txt'):
+    try:
+        with open(file_name, 'r', encoding='utf-8') as file:
+            content = file.read()
+        return content
+    except FileNotFoundError:
+        return f"Error: The file '{file_name}' does not exist."
+    except Exception as e:
+        return f"Error: An unexpected error occurred: {e}"
+    
 def replace_hex_values(match):
     hex_value = match.group(1)
     return str(int(hex_value, 16))
@@ -214,6 +223,16 @@ class UI:
         except:
             print(Fore.GREEN + "There was an error... (Check console logs)" + Fore.RESET)
             return "There was an error... (Check console logs)"
+        
+    def reset_prompt():
+        prompt_path = local_folder + "/prompt.txt"
+        try:
+            CustomFileSystem.save_text_to_file(prompt_path, original_prompt)
+            print(Fore.GREEN + "Saved" + Fore.RESET)
+            return original_prompt
+        except:
+            print(Fore.GREEN + "There was an error... (Check console logs)" + Fore.RESET)
+            return "There was an error... (Check console logs)"
     
     def update_model(new_model):
         global model
@@ -243,13 +262,9 @@ class UI:
         if os.path.isfile(os.path.join(local_folder, "prompt.txt")):
             prompt = CustomFileSystem.read_text_from_file(os.path.join(local_folder, "prompt.txt"))
             return prompt
-        else:
-            prompt = original_prompt
-            return prompt
 
     def prompt_test():
-        global prompt
-        print(Fore.YELLOW + "Current loaded prompt =\n" + Fore.RESET + prompt)
+        print(Fore.YELLOW + "Current loaded prompt =\n" + Fore.RESET + read_prompt_file())
 
     def model_test():
         global model
@@ -337,8 +352,9 @@ class UI:
     def find_path():
         root = tk.Tk()
         root.withdraw()
+        root.attributes('-topmost', True)
 
-        folder_path = filedialog.askdirectory()
+        folder_path = filedialog.askdirectory(parent=root)
 
         if folder_path:
             folder_path = folder_path.replace("\\", "/")
@@ -349,6 +365,7 @@ class UI:
     def find_file():
         root = tk.Tk()
         root.withdraw()
+        root.attributes('-topmost', True)
 
         file_path = filedialog.askopenfilename()
 
@@ -446,4 +463,3 @@ class UI:
         except:
             print(Fore.RED + "There was an error" + Fore.RESET)
             return "There was an error"
-        
