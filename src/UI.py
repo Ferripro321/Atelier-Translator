@@ -6,12 +6,19 @@ import webbrowser
 from functions import *
 from fixer import *
 
+def check_prompt_file():    
+    if not os.path.exists("prompt.txt"):
+        with open("prompt.txt", 'w', encoding='utf-8') as file:
+            file.write(original_prompt)
+            print(f"Created prompt.txt")
+    else:
+        print(f"prompt.txt already exists.")
 
 def translation_start(gust_tools_path, is_a24, openai_apikey):
-    global prompt
     global model
+    print("translation_start prompt:" + read_prompt_file())
     openai.api_key = openai_apikey
-    custom_ebm_translation_handler(prompt, model) if is_a24 else gust_tools_translator_handler(gust_tools_path, prompt, model)
+    custom_ebm_translation_handler(read_prompt_file(), model) if is_a24 else gust_tools_translator_handler(gust_tools_path, read_prompt_file(), model)
     return "ok"
 
 def refresh_errors():
@@ -40,7 +47,7 @@ def count_new_file_lines(text):
 def mod_creator_handler(gust_tools_path, is_a24):
     return UI.custom_dumper_create_mod_folder(gust_tools_path) if is_a24 else UI.gust_tools_create_mod_folder(gust_tools_path)
 
-
+check_prompt_file()
 with gr.Blocks(title="Atelier Translator") as ui:
     with gr.Tabs(): 
         with gr.Tab("Unpack"):
@@ -111,14 +118,17 @@ with gr.Blocks(title="Atelier Translator") as ui:
             gr.Markdown("To get an OpenAI API Key visit: https://platform.openai.com/account/api-keys make sure you have credits on your account (When you create your acc you get free credits, but this will expire in few months so if they expired create a new account): https://platform.openai.com/account/usage")
             openai_apikey = gr.Textbox(label="OpenAI API key")
             gr.Markdown("Click the Atelier Ryza 3 check box if you are translating / creating a mod for that specific game")
-            is_a24 = gr.Checkbox(label="Atelier Ryza 3")
+            is_a24 = gr.Checkbox(label="Atelier Ryza 3") 
             gr.Markdown("You may wanna edit this prompt to make Chat GPT translate to the language you want, current promp is ideal for Spanish. (Click save prompt after editing it)")
             gr.Markdown("⚠️ The largest the prompt is the more time and credits it will take ⚠️")
-            new_prompt = gr.Textbox(label="Prompt",value=prompt, lines=15)
+            gr.Markdown("⚠️ You can completely change the prompt if you think you can optimize it more, but the structure should be handled like the original prompt explains ⚠️")
+            new_prompt = gr.Textbox(label="Prompt",value=read_prompt_file(), lines=15)
             btn5 = gr.Button("Save prompt", variant="primary")
             prompt_status = gr.Textbox(show_label=False, interactive=False)
             gr.Markdown("To make sure the promp has been changed/loaded correctly you can click the following button and check your console to see the prompt that has been returned")
             test_prompt = gr.Button("Test prompt")
+            gr.Markdown("If you broke the prompt you can click the following button to reset the prompt to the original one")
+            reset_prompt = gr.Button("Reset prompt")
             gr.Markdown("You can change the OpenAI Model here, but I wouldn't recommend to use gpt4 models due to price. More info on models here: https://platform.openai.com/docs/models")
             new_model = gr.Textbox(label="Model", value="gpt-3.5-turbo")
             btn6 = gr.Button("Save model", variant="primary")
@@ -146,6 +156,7 @@ with gr.Blocks(title="Atelier Translator") as ui:
             gr.Markdown("If you find any bug or you need help you can dm me on discord (ferripro) or send me an email at ferripro@proton.me")
             pass
     
+    new_prompt.value = read_prompt_file()
     btn1.click(UI.find_path, outputs=game_path)
     btn2.click(UI.find_path, outputs=gust_tools_path)
     btn3.click(UI.unpack_pak, inputs=[game_path, gust_tools_path], outputs=unpack_status)
@@ -157,6 +168,7 @@ with gr.Blocks(title="Atelier Translator") as ui:
 
 
     test_prompt.click(UI.prompt_test)
+    reset_prompt.click(UI.reset_prompt, outputs=new_prompt)
     test_model.click(UI.model_test)
     refresh.click(refresh_errors, outputs=to_fix)
     Show_file_content.click(UI.load_original_file, inputs=to_fix, outputs=original_text)
