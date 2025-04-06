@@ -10,8 +10,6 @@ Now with v2 Atelier Translator has a web ui and it's more easy than ever to use,
 4. Open **start_web_ui.bat**
 5. Follow the steps that the web ui will tell you and enjoy!
 
-## Warning: Atelier Yumia is currently not supported, but I plan to add support for it soon.
-
 # Credits
 
 Thanks to [azusagawa.it](https://github.com/Azusagawa-it) for the [EBM extractor for a24 (Ryza 3)](https://github.com/Azusagawa-it/a24_ebm)
